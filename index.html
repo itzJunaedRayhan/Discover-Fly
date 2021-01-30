@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Booking</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    <!--  Font Awesome  -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet" />
+</head>
+
+<body>
+    <!--Header and Menu Section-->
+    <header class="container">
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a class="active" href="#">Sign Up</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!--Booking Section-->
+    <main class="main-content container">
+        <div class="booking-form">
+            <h3>Booking Flights</h3>
+            <div class="input-group">
+                <select onChange="LocationAndDateChange(this,'From')" class="form-select Locations">
+                    <option selected>Flying From</option>
+                    <option value="1">Shayestaganj, Habiganj</option>
+                    <option value="2">Sylhet, Bangladesh</option>
+                    <option value="3">Habiganj, Bangladesh</option>
+                    <option value="3">Dhaka, Bangladesh</option>
+                    <option value="3">Gazipur, Bangladesh</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <select onChange="LocationAndDateChange(this, 'To')"  class="form-select Locations">
+                    <option selected>Flying To</option>
+                    <option value="1">New York, America</option>
+                    <option value="2">Paris, France</option>
+                    <option value="3">Rome, Italy</option>
+                    <option value="3">Moscow, Russia</option>
+                    <option value="3">Kashmir, India</option>
+                </select>
+            </div>
+            <div class="inputs">
+                <div class="input-group">
+                    <label" for="">Departure</label>
+                    <input onchange="LocationAndDateChange(this, 'Departure')" class="inp-style" type="date" name="">
+                </div>
+                <div class="input-group">
+                    <label for="">Return</label>
+                    <input onchange="LocationAndDateChange(this, 'Return')" class="inp-style" type="date" name="">
+                </div>
+            </div>
+            <div class="input-group f-class">
+                <div>
+                    <label for="">First Class ($150)</label>
+                    <input id="firstClass" class="inp-style inp-width" type="number" name="" value="0" readonly>
+                </div>
+                <div class="plus-minus-btn">
+                    <button onclick="handleTicketQuantity('firstClass', true)" class="btn btn-default"><i class="fa fa-plus"></i></button>
+                    <button onclick="handleTicketQuantity('firstClass', false)" class="btn btn-default"><i class="fa fa-minus"></i></button>
+                </div>
+            </div>
+            
+            <div class="input-group f-class">
+                <div>
+                    <label for="">Economy ($100)</label>
+                    <input id="economyClass" class="inp-style inp-width" type="number" value="0" readonly>
+                </div>
+                <div class="plus-minus-btn">
+                    <button onclick="handleTicketQuantity('economyClass', true)"><i class="fas fa-plus"></i></button>
+                    <button onclick="handleTicketQuantity('economyClass', false)"><i class="fas fa-minus"></i></button>
+                </div>
+            </div>
+            <div class="calculations">
+                <div class="amount">
+                    <div class="left">
+                        <p>Subtotal</p>
+                    </div>
+                    <div class="right">
+                        <p id="subTotal">$000</p>
+                    </div>
+                </div>
+
+                <div class="amount">
+                    <div class="left">
+                        <p>Charge 10% VAT</p>
+                    </div>
+                    <div class="right">
+                        <p id="tax">$00</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="amount">
+                    <div class="left">
+                        <h4>Total</h4>
+                    </div>
+                    <div class="right">
+                        <p id="total">$000</p>
+                    </div>
+                </div>
+            </div>
+            <button onclick="afterSubmit()" class="btn-style">Book Now</button>
+        </div>
+
+        <div class="booking-content">
+            <h1>discover <br> around the world</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicingelit. Provident voluptatibus quam fuga laborumalias veniam libero autem quasi maxime ullam vero nama imi dolor, architecto ab facilis eaque deserunt nobise voluptatibus quam</p>
+        </div>
+    </section>
+
+
+    <section id="afterSubmit">
+        <div class="order-details">
+            <h1>Your Ticket Booked Successfully</h1>
+            <h3>Flying From    : <span id="locationFrom"></span></h3><br><br>
+            <h3>Flying To      : <span id="locationTo"></span></h3><br><br>
+            <h3>Departure Date : <span id="departure"></span></h3><br><br>
+            <h3>Return Date    : <span id="return"></span></h3><br><br>
+            <h3>First Class Ticket Quantity($150) : <span id="firstClassTicketQty"></span></h3><br><br>
+            <h3>Economy Ticket Quantity($100) : <span id="EconomyTicketQty"></span></h3><br><br>
+            <h3>Total Tickets Quantity : <span id="totalTickets"></span></h3><br><br>
+            <h3>Sub Total Price : <span id="subTotalPrice"></span></h3><br><br>
+            <h3>Charge 10% VAT : <span id="totalTax"></span></h3><br><br>
+            <hr>
+            <h3>Total Amount : <span id="totalAmount"></span></h3>
+        </div>
+    </section>
+
+    <!--Thank You-->
+    <script>
+    //  Increase and Decrease Ticket Quantity
+        function handleTicketQuantity(ticket, target){
+            const ticketQty   = parseFloat(document.getElementById(ticket).value);
+            let AfterIncrease = ticketQty;
+            if(target == true){
+                AfterIncrease = ticketQty + 1;
+            }
+            if(target == false && ticketQty > 0){
+                AfterIncrease = ticketQty - 1;
+            }
+            document.getElementById(ticket).value = AfterIncrease;
+            ticketPriceCalculate();
+        }
+
+    //  Calculate Total Price of Tickets
+        function ticketPriceCalculate(){
+            const firstClassTicket = document.getElementById('firstClass').value;
+            const economyClassTicket = document.getElementById('economyClass').value;
+        // Total Ticket
+            document.getElementById('firstClassTicketQty').innerHTML = firstClassTicket;
+            document.getElementById('EconomyTicketQty').innerHTML    = economyClassTicket;
+            document.getElementById('totalTickets').innerHTML        = parseFloat(firstClassTicket) + parseFloat(economyClassTicket);
+        // SubTotal Price
+            const Subtotal = firstClassTicket * 150 + economyClassTicket * 100;
+            document.getElementById('subTotal').innerText = '$' + Subtotal;
+            document.getElementById('subTotalPrice').innerHTML = '$' + Subtotal;
+            
+        // 10 % Tax    
+            const tax = Subtotal * 0.1; 
+            document.getElementById('tax').innerText = '$' + tax;
+            document.getElementById('totalTax').innerHTML            = '$' + tax;
+        // Total Price
+            const totalPrice = Subtotal + tax;
+            document.getElementById('total').innerText = '$' + totalPrice;
+            document.getElementById('totalAmount').innerHTML = '$' + totalPrice;
+        }
+
+    
+    //  Get The Location and Date From User 
+        function LocationAndDateChange(selected,id){
+            console.log(id);
+            if(id == 'From'){
+                document.getElementById('locationFrom').innerHTML = selected.options[selected.value].text;
+            }
+            if(id == 'To'){
+                document.getElementById('locationTo').innerHTML = selected.options[selected.value].text;   
+            }
+            if(id == 'Departure'){
+                document.getElementById('departure').innerHTML = selected.value;
+            }
+            if(id == 'Return'){
+                document.getElementById('return').innerHTML = selected.value;
+            }
+        }
+    
+    //  Form Action Button after Submit
+        function afterSubmit(){
+            let totalPrice = document.getElementById('total').innerText;
+            const From  = document.getElementById('locationFrom').innerHTML;
+            const To = document.getElementById('locationTo').innerHTML;
+            const Departure    = document.getElementById('departure').innerHTML;
+            const Return       = document.getElementById('return').innerHTML;
+            if(totalPrice == '$000' || totalPrice == '$0' || From == "" || To == "" || Departure  == "" || Return == ""){
+                alert('Fill the Full Form First !')
+            }else{
+                var show = document.getElementById('afterSubmit');
+                show.style.display = 'block'; 
+            }
+        }
+    </script>
+</body>
+
+</html>
